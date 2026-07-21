@@ -1,6 +1,6 @@
 # Development Protocol
 
-A document-driven development protocol with **two decision gates** that prevent goalpost drift before you commit to the full build.
+A document-driven development protocol with **three decision gates** that prevent solution-jumping and catch wrong foundations before you build on them.
 
 Built by following [the Development Protocol](https://github.com/B67687/Development-Protocol) itself — a recursive self-completeness test.
 
@@ -11,83 +11,89 @@ RAW INTENT
     │
     ▼
 ┌─────────────────────────────────────────────────┐
-│              GATE 1: AMBITION                    │
-│  Socratic back-and-forth until the goal          │
-│  is falsifiable and both parties agree           │
-│  Output: clear falsifiable hypothesis            │
+│         EXTRACTION (Step 0)                     │
+│  Extract X (real problem) from Y (stated        │
+│  solution). 7 proven techniques: Goal Climb,    │
+│  No-Computer Check, Why-Tree, Contextual Probe, │
+│  Mom Question, Problem Statement Wall,          │
+│  Job/Pain/Gain Map.                             │
+└─────────────────────────────────────────────────┘
+    │
+┌─────────────────────────────────────────────────┐
+│         FUNDAMENTALS                            │
+│  Identify one-way door decisions. Validate each │
+│  with minimum prototype. Detect LLM bias.       │
+│  Then proceed to decomposition only when        │
+│  foundations are proven safe.                   │
+└─────────────────────────────────────────────────┘
+    │
+    ▼
+│         DECOMPOSITION                             │
+│  Cynefin classify → MECE tree → confirm each    │
+│  level → KNOWN / RESEARCH / PROTOTYPE routing    │
 └─────────────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────────────┐
-│              RESEARCH (LANDSCAPE)                │
-│  Map existing solutions, identify unknowns       │
+│              AMBITION (research-interleaved)     │
+│  Each round: answer → research → ask → ...      │
+│  Tightening loop until convergence               │
 └─────────────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────────────┐
-│              GATE 2: PROTOTYPING                 │
-│  Rapid throwaway prototypes → KILL/PIVOT/COMMIT │
-│  based on evidence, not enthusiasm               │
-│  Output: COMMIT decision → locked spec           │
+│              LANDSCAPE (research + Cynefin)      │
+└─────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────────────────────────┐
+│              VALIDATION (prototype gate)         │
+│  KILL / PIVOT / COMMIT based on evidence        │
 └─────────────────────────────────────────────────┘
     │ (if COMMIT)
     ▼
 ┌─────────────────────────────────────────────────┐
-│              EXECUTION (SPEC → RULES.md)         │
-│  Locked spec → AI executes via governance        │
+│              SPECIFICATION                       │
+│  + Design for Change section (v3)               │
 └─────────────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────────────┐
-│              POLISH (HUMAN FINAL PASS)           │
-│  Edge case hunt, quality gates, shipping         │
+│              EXECUTOR (with 10 v3 rules)         │
+│  Interface, Test, Boundary, Size, Cycle,        │
+│  Appetite, AI, Abstraction, Dependency, Backlog  │
 └─────────────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────────────┐
-│              EXPLAINER (NEW MODULE)              │
-│  AI-generated code explainer in plain language    │
-│  Macro-to-micro architecture walkthrough.         │
-│  User validates understanding before shipping.    │
+│              POLISH → EXPLAINER → SPEC_SYNC     │
+│              → REVIEW → ship                    │
 └─────────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────────┐
-│              SPEC SYNC (GATE)                    │
-│  Research-backed spec-to-code fidelity check     │
-│  Forward & Lethbridge 2002, Fluri 2007,          │
-│  Kruchten 2012: specs drift from code             │
-│  without explicit management                      │
-│  Output: as-built spec for next cycle             │
-└─────────────────────────────────────────────────┘
-<tr><td colspan="2">
+```
 
-**Prep-sequence:** `AMBITION` → `LANDSCAPE` → `VALIDATION` → `SPECIFICATION` → `EXECUTOR` → `POLISH` → `EXPLAINER` → `SPEC_SYNC` → `REVIEW` → ship
+**Prep-sequence:** `EXTRACTION` -> `FUNDAMENTALS` -> `DECOMPOSITION` -> `AMBITION` -> `LANDSCAPE` -> `VALIDATION` -> `SPECIFICATION` -> `EXECUTOR` -> `POLISH` -> `EXPLAINER` -> `SPEC_SYNC` -> `REVIEW` -> ship
 
 See [REVIEW.md](REVIEW.md) for the independence protocol and fixed checklist.
-</td></tr>
-
-See [REVIEW.md](REVIEW.md) for the independence protocol and fixed checklist.
-</td></tr>
 
 ## Contents
 
-| File | What it is |
-|------|------------|
-| `AMBITION.md` | **Gate 1** — Socratic dialogue to clarify intent |
-| `LANDSCAPE.md` | Research protocol — map what exists |
-| `VALIDATION.md` | **Gate 2** — rapid prototyping with KILL/PIVOT/COMMIT |
-|| `SPECIFICATION.md` | Locked plan-IS-spec template (14 sections) |
+| `EXTRACTION.md` | Gate 0 - Extract X (real problem) from Y (stated solution), 7 proven techniques |
+| `FUNDAMENTALS.md` | Identify one-way door decisions, validate with minimum prototype, detect LLM bias |
+| `DECOMPOSITION.md` | Intent decomposition - Cynefin classify, MECE tree, KNOW/RESEARCH/PROTOTYPE routing |
+| `AMBITION.md` | Gate 1 - Research-interleaved dialogue to clarify intent |
+| `LANDSCAPE.md` | Research protocol - map what exists |
+| `VALIDATION.md` | Gate 2 - rapid prototyping with KILL/PIVOT/COMMIT |
+| `SPECIFICATION.md` | Locked plan-IS-spec template (14 sections) |
 | `EXECUTOR.md` | AI execution handoff with autonomy levels |
 | `POLISH.md` | Human final pass after AI execution |
-|| `EXPLAINER.md` | AI-generated code explainer for non-coder (docs/EXPLAINER.md) |
-|| `SPEC_SYNC.md` | Spec-to-code fidelity gate with research backing (docs/SPEC_SYNC.md) |
-| `RULES.md` | Core protocol governance (v2.2.0) |
+| `EXPLAINER.md` | AI-generated code explainer for non-coder (docs/EXPLAINER.md) |
+| `SPEC_SYNC.md` | Spec-to-code fidelity gate with research backing (docs/SPEC_SYNC.md) |
+| `RULES.md` | Core protocol governance (v3.0.0 — 12 sections) |
 | `METHODOLOGY.md` | Post-project retrospective |
 | `PLAYBOOK.md` | Infrastructure checklist |
-||| `REVIEW.md` | **Meta-review gate** — independent agent audits protocol compliance |
-||| `.omo/reviews/` | Review findings archive — one file per review run |
+| `REVIEW.md` | **Meta-review gate** — independent agent audits protocol compliance |
+| `.omo/reviews/` | Review findings archive — one file per review run |
 
 ## Origin
 
-Generated by following the Development Protocol (v2.1) through its PREP PHASE on itself — producing a refined version that centers the prototyping gate as the key innovation. July 2026.
+Generated by following the Development Protocol (v3.0.0) through its PREP PHASE on itself — producing a refined version that centers the prototyping gate as the key innovation. July 2026.

@@ -27,6 +27,7 @@ Project: {{PROJECT_NAME}}
 ## 2. Phase Definitions
 
 ### DISCOVER
+
 **Purpose:** Learn the domain. Reduce unknowns before committing to architecture.
 **Allowed:** Reading, researching, prototyping, spike experiments.
 **Not allowed:** Committed production code, infrastructure setup, polish.
@@ -34,6 +35,7 @@ Project: {{PROJECT_NAME}}
 **Timebox:** Fixed (hours or days, not "until ready").
 
 ### WORK
+
 **Purpose:** Build core features against a fixed V1 scope.
 **Allowed:** Code, tests, minimal inline docs. No polish. No scope expansion.
 **Not allowed:** README updates, badges, diagrams, publishing, refactoring existing code.
@@ -42,18 +44,21 @@ Project: {{PROJECT_NAME}}
 **Quality gate:** Compiles + tests pass. Nothing more.
 
 ### ITERATE
+
 **Purpose:** Refine UX through real-world use.
 **Allowed:** UX changes, gesture tuning, layout adjustments.
 **Not allowed:** New V1 features.
 **Stop when:** UX iterations converge (3+ rounds without meaningful change).
 
 ### PERFECT
+
 **Purpose:** Harden existing code. Enter only when WORK/ITERATE scope is complete.
 **Allowed:** Fuzz testing, static analysis, audit, benchmarks, CI hardening.
 **Not allowed:** New features or UX changes.
 **Quality gate:** Full lint + full test suite + forbidden-pattern audit + Constitution check.
 
 ### DISTRIBUTE
+
 **Purpose:** Package, document, publish.
 **Allowed:** README, CHANGELOG, diagrams, badges, publishing, CI polish.
 **Not allowed:** Any code changes.
@@ -66,12 +71,15 @@ Project: {{PROJECT_NAME}}
 **Language/stack:** {{LANGUAGE}}
 
 ### IN SCOPE (must ship)
+
 - {{SCOPE_DESCRIPTION}}
 
 ### OUT OF SCOPE (explicitly not V1)
+
 - (deferred to V2)
 
 ### NO-GOS (will never do)
+
 - (prevents rabbit holes)
 
 ---
@@ -82,12 +90,14 @@ Project: {{PROJECT_NAME}}
 **Autonomy:** HIGH in DISCOVER/WORK | LOW in PERFECT | MEDIUM in ITERATE/DISTRIBUTE
 
 ### Constraints
+
 - **Language / edition:** {{LANGUAGE}}
 - **Quality floor:** Lint-clean, no suppressed warnings without reason
 - **Dependency policy:** No new deps without checking if existing scope covers the need
 - **Testing requirements:** Tests written BEFORE implementation in WORK phase
 
 ### Decision Framework
+
 1. **Correctness** over speed — wrong output at any speed is useless
 2. **Consistency** with existing patterns over novel approaches
 3. **Simplicity** over complexity unless measured
@@ -105,7 +115,7 @@ The AI MUST stop and ask before proceeding if ANY of these are true:
 - [ ] Task **deletes or overwrites** existing code → confirm first
 - [ ] Task is **outside current phase** → refuse, explain why
 - [ ] Task touches **OUT OF SCOPE** → refuse
-- [ ] Task would **change V1 scope** → refuse, require conscious warp
+- [ ] Task would **change V1 scope** -> refuse, document as learning shift
 - [ ] Task violates the **Constitution** → refuse, cite which principle
 - [ ] Task is **ambiguous** → present options with trade-offs
 - [ ] Task exceeds **200 lines** of new code → propose plan first
@@ -115,13 +125,13 @@ The AI MUST stop and ask before proceeding if ANY of these are true:
 
 ## 6. Verification Gates
 
-| Phase | Must pass before reporting done |
-|-------|--------------------------------|
-| **DISCOVER** | Research summary complete, decision reached |
-| **WORK** | Build + tests pass + tests written BEFORE code |
-| **ITERATE** | Real-device test + UX convergence |
-| **PERFECT** | Full lint + full test suite + Constitution compliance |
-| **DISTRIBUTE** | Spellcheck + link check + format conformance |
+| Phase          | Must pass before reporting done                       |
+| -------------- | ----------------------------------------------------- |
+| **DISCOVER**   | Research summary complete, decision reached           |
+| **WORK**       | Build + tests pass + tests written BEFORE code        |
+| **ITERATE**    | Real-device test + UX convergence                     |
+| **PERFECT**    | Full lint + full test suite + Constitution compliance |
+| **DISTRIBUTE** | Spellcheck + link check + format conformance          |
 
 ---
 

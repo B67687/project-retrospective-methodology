@@ -1,5 +1,7 @@
 # EXECUTOR.md — Spec-to-Execution Handoff
 
+Updated for v3 — adds Design for Change Rules.
+
 > Use this after SPECIFICATION.md is complete.
 > This document bridges the gap between "I have a complete spec" and "I'm autonomously executing it via RULES.md."
 > The spec IS the plan. This document tells the executor how to follow it.
@@ -64,11 +66,11 @@ Once the route is chosen:
 
 The executor operates at one of three autonomy levels. The level determines what the AI can do without human approval.
 
-| Level             | When used                                                                     | Permitted without asking                                                                                                                             | Always blocks on                                                                        |
-| ----------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| **LOW**           | Prep phases (AMBITION→SPEC), early WORK while spec is stabilizing             | Nothing outside the current task description                                                                                                         | Any file write, any command, any dep addition                                           |
-| **HIGH**          | WORK phase with locked spec, all checkpoints passing                          | Creating/modifying files in SPEC.md section 3 file tree, running commands from SPEC.md section 4 CI, adding dependencies listed in SPEC.md section 5 | Spec violations, RULES.md failure patterns (FP-*), scope warps, Constitution violations |
-| **CRITICAL-ONLY** | Late WORK when 3+ checkpoints passed consecutively without human intervention | Same as HIGH, plus timeline adjustments within ±20% of SPEC.md section 7 estimates                                                                   | Constitution violations, unrecoverable errors (data loss, security)                     |
+| Level             | When used                                                                     | Permitted without asking                                                                                                                             | Always blocks on                                                                            |
+| ----------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **LOW**           | Prep phases (AMBITION→SPEC), early WORK while spec is stabilizing             | Nothing outside the current task description                                                                                                         | Any file write, any command, any dep addition                                               |
+| **HIGH**          | WORK phase with locked spec, all checkpoints passing                          | Creating/modifying files in SPEC.md section 3 file tree, running commands from SPEC.md section 4 CI, adding dependencies listed in SPEC.md section 5 | Spec violations, RULES.md failure patterns (FP-*), learning shifts, Constitution violations |
+| **CRITICAL-ONLY** | Late WORK when 3+ checkpoints passed consecutively without human intervention | Same as HIGH, plus timeline adjustments within ±20% of SPEC.md section 7 estimates                                                                   | Constitution violations, unrecoverable errors (data loss, security)                         |
 
 **Starting autonomy:** Always start at LOW. Escalate to HIGH only when SPEC.md is locked and the first checkpoint passes. Escalate to CRITICAL-ONLY only when 3 consecutive checkpoints pass without intervention.
 
@@ -115,13 +117,59 @@ When a SPEC.md assumption fails during execution:
 
 ---
 
+## Design for Change Rules (v3)
+
+These rules make goalpost shifts cheap instead of expensive. They are not optional polish — they are structural rules that every project must follow. Enforce them in code review and CI.
+
+### 1. Interface Rule
+
+"No interface before its second consumer." A single-implementation interface is just complexity. Extract the abstraction when the second consumer arrives, not the first.
+
+### 2. Test Rule
+
+"Test the contract, not the implementation." Tests should only call public APIs. No mocking of your own code. No logic (if/for/while) in test files. Prefer behavioral tests that assert on return values and error types, not on internal state or call order.
+
+### 3. Module Boundary Rule
+
+"Every module has a single public entry point." All exports go through one index file (index.ts, lib.rs, mod.go). No cross-module imports of internal paths. Violations are caught in code review.
+
+### 4. Size Rule
+
+No file exceeds 250 lines of code. No function exceeds 40 lines. Enforce with a linter (max-lines, max-lines-per-function, or equivalent).
+
+### 5. Cycle Rule
+
+"Every cycle produces a shippable artifact." Not "progress" — a deployed, testable, usable thing. If it cannot ship, it is too big for one cycle.
+
+### 6. Appetite Rule
+
+"Define the maximum time before designing the solution." The appetite (time budget) is fixed. Scope adjusts to fit. If the scope does not fit the appetite, cut scope — do not extend time.
+
+### 7. AI Rule
+
+"AI-generated code passes the same structural checks as human-written code." No special exemptions. Same lint rules, same max file sizes, same interface discipline.
+
+### 8. Abstraction Rule
+
+"Rule of three — extract on the third occurrence, not the first." Write the first occurrence concretely. Duplicate on the second (it is okay). Abstract on the third — now you know the shape.
+
+### 9. Dependency Rule
+
+"Core domain never imports infrastructure." Core modules (business logic, types, algorithms) import zero infrastructure packages. All infrastructure access goes through a port (interface) defined in the core and implemented by an adapter in the infrastructure layer.
+
+### 10. Backlog Rule
+
+"No perpetual backlog. Every cycle starts clean." Old items must be re-shaped to compete at the betting table. If an item was worth doing, it survives re-shaping. If not, it was never really needed.
+
+---
+
 ## Meta: How to Execute Specifications
 
 1. **Trust the spec, but verify** — the spec is authoritative, but if reality contradicts it, reality wins.
 2. **Checkpoint obsessively** — every section completion saves days of re-work on interruption.
 3. **Read sections in order** — each section builds on the previous. Don't jump.
 4. **Flag ambiguity immediately** — guessing is the #1 cause of wasted output. If a spec line is unclear, stop and ask.
-5. **Respect the lock** — once execution starts, SPEC.md changes go through RULES.md scope warp rules.
+5. **Respect the lock** - once execution starts, SPEC.md changes go through RULES.md learning shift rules.
 
 ---
 

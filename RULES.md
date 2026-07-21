@@ -10,29 +10,34 @@
 
 ---
 
-## Table of Contents
-
-1. [Project Type Routing](#1-project-type-routing)
-2. [Constitution (Immutable)](#2-constitution-immutable)
-3. [Phase Definitions](#3-phase-definitions)
-4. [V1 Scope & Scope Warps](#4-v1-scope--scope-warps)
-5. [AI Persona & Constraints](#5-ai-persona--constraints)
-6. [Stop Rules](#6-stop-rules)
-7. [Verification Gates](#7-verification-gates)
-8. [Test Philosophy](#8-test-philosophy)
-9. [Evolution & Phase Exit](#9-evolution--phase-exit)
-10. [Known Failure Patterns](#10-known-failure-patterns)
-11. [Session Kickoff](#11-session-kickoff)
+| 1. | [Project Type Routing](#1-project-type-routing)
+| 2. | [Intent Decomposition (Recursive Breakdown)](#2-intent-decomposition-recursive-breakdown)
+| 3. | [Constitution (Immutable)](#3-constitution-immutable)
+| 4. | [Phase Definitions](#4-phase-definitions)
+| 5. | [V1 Scope & Learning Shifts](#5-v1-scope--learning-shifts)
+| 6. | [AI Persona & Constraints](#6-ai-persona--constraints)
+| 7. | [Stop Rules](#7-stop-rules)
+| 8. | [Verification Gates](#8-verification-gates)
+| 9. | [Test Philosophy](#9-test-philosophy)
+| 10. | [Evolution & Phase Exit](#10-evolution--phase-exit)
+| 11. | [Known Failure Patterns](#11-known-failure-patterns)
+| 12. | [Session Kickoff](#12-session-kickoff)
 
 > **Not sure what to build, or have a raw intent? (prep-phase)**
-> Enter the **PREP PHASE** — a structured sequence with **two decision gates**
+> Enter the **PREP PHASE** — a structured sequence with **three decision gates**
 > that prevent goalpost drift before you commit to the full build:
 >
+> **Gate 0 — EXTRACTION:** [EXTRACTION.md](EXTRACTION.md) — Extract X (real problem) from Y (stated solution).
+> 7 proven techniques. If you can describe the problem without solution words, pass.
+
+> **Fundamentals Check:** [FUNDAMENTALS.md](FUNDAMENTALS.md) — Identify one-way door decisions,
+> validate with minimum prototype, detect LLM bias. Prevents wrong-foundation failures.
+
 > **Gate 1 — AMBITION Dialogue:** [AMBITION.md](AMBITION.md) — Clarify your intent via Socratic
->   back-and-forth until the goal is falsifiable and both parties agree.
+> back-and-forth until the goal is falsifiable and both parties agree.
 > **Research:** [LANDSCAPE.md](LANDSCAPE.md) — Map existing solutions and identify unknowns.
 > **Gate 2 — Prototyping:** [VALIDATION.md](VALIDATION.md) — Rapid throwaway prototypes, then
->   KILL/PIVOT/COMMIT based on evidence, not enthusiasm.
+> KILL/PIVOT/COMMIT based on evidence, not enthusiasm.
 >
 > If COMMIT: [SPECIFICATION.md](SPECIFICATION.md) — Lock the plan (14 sections, frozen after this).
 > [EXECUTOR.md](EXECUTOR.md) — Hand off to RULES.md for execution.
@@ -40,6 +45,7 @@
 > [EXPLAINER.md](docs/EXPLAINER.md) — AI-generated architecture explainer for non-coder verification.
 > [REVIEW.md](REVIEW.md) — **Meta-review gate**: independent agent audits protocol compliance.
 > **Single-source-of-truth:** RULES.md always wins on conflicts between protocol documents.
+> **Recursion meta-rule:** Every step in this protocol is recursive. If the output of a step is still ambiguous after one pass, apply the step again at a deeper level. Most problems resolve within 2-3 recursions. If 3 recursions still don't converge, the problem needs a different framing (not deeper iteration of the same framing).
 
 ## 1. Project Type Routing
 
@@ -47,7 +53,7 @@ The protocol is NOT a fixed pipeline — it's a routing system that selects the 
 
 ```
 ├── NO — I'm not sure yet, or I have a raw intent
-│   └── PREP PHASE — Follow the prep sequence above (AMBITION → LANDSCAPE → VALIDATION → SPECIFICATION → EXECUTOR)
+│   └── PREP PHASE — Follow the prep sequence above (EXTRACTION -> FUNDAMENTALS -> AMBITION -> LANDSCAPE -> VALIDATION -> SPECIFICATION -> EXECUTOR)
 │       (Output: SPECIFICATION.md → enter routing below)
 └── YES — I know what I'm building
     │
@@ -74,9 +80,24 @@ The protocol is NOT a fixed pipeline — it's a routing system that selects the 
             └── Route: MAINTENANCE — PERFECT → DISTRIBUTE only (no new features)
 ```
 
+## 2. Intent Decomposition (Recursive Breakdown)
+
+> Before ANY planning or architecture, classify and decompose the raw intent.
+> See the full protocol in [DECOMPOSITION.md](DECOMPOSITION.md).
+
+> **Summary:**
+>
+> 1. Cynefin classify (Clear / Complicated / Complex / Chaotic)
+> 2. Recursive MECE tree (split until KNOWN / RESEARCH / PROTOTYPE)
+> 3. User confirmation gate (confirm each level)
+> 4. Convergence (stop when every leaf fits one session)
+>    **Key rule:** If still unknown after 3 levels, it is Complex. Assign to prototype.
+
 ---
 
-## 2. Constitution (Immutable)
+---
+
+## 3. Constitution (Immutable)
 
 > The Constitution is the project's immutable DNA. It is set once at bootstrap and defines
 > architectural principles that govern ALL generation across ALL phases. The AI must reference
@@ -111,11 +132,12 @@ The protocol is NOT a fixed pipeline — it's a routing system that selects the 
 
 ---
 
-## 3. Phase Definitions
+## 4. Phase Definitions
 
 Each phase is a modular building block. Use only the ones your project needs.
 
 ### DISCOVER
+
 **Purpose:** Learn the domain. Reduce unknowns before committing to architecture.
 **Hypothesis frame:** Start with a specific question: "I believe X is true about this domain. I will test it by Y." (Borrowed from OpenScience's research loop.)
 **Allowed:** Reading, researching, prototyping, spike experiments.
@@ -125,6 +147,7 @@ Each phase is a modular building block. Use only the ones your project needs.
 **Stop when:** The remaining unknowns no longer block architecture decisions.
 
 ### WORK
+
 **Purpose:** Build core features against a fixed V1 scope.
 **Allowed:** Code, tests, minimal inline docs. No polish. No scope expansion.
 **Not allowed:** README updates, badges, diagrams, publishing, refactoring existing code.
@@ -133,6 +156,7 @@ Each phase is a modular building block. Use only the ones your project needs.
 **Quality gate:** Compiles + tests pass. Nothing more.
 
 ### ITERATE
+
 **Purpose:** Refine UX through real-world use. The product IS the feel.
 **Allowed:** UX changes, gesture tuning, animation tweaks, layout adjustments.
 **Not allowed:** New V1 features (those belong in WORK).
@@ -141,56 +165,68 @@ Each phase is a modular building block. Use only the ones your project needs.
 **Stop when:** UX iterations converge (3+ rounds without meaningful change).
 
 ### PERFECT
+
 **Purpose:** Harden existing code. Enter only when WORK/ITERATE scope is complete.
 **Allowed:** Fuzz testing, static analysis, audit, benchmarks, CI hardening.
 **Not allowed:** New features or UX changes. PERFECT is for quality, not scope.
 **Quality gate:** Full lint + full test suite + no-forbidden-patterns audit + Constitution compliance check.
 
 ### DISTRIBUTE
+
 **Purpose:** Package, document, publish. Enter only when PERFECT gates pass.
 **Allowed:** README, CHANGELOG, diagrams, badges, publishing, CI polish.
 **Not allowed:** Any code changes.
 
 ---
 
-## 4. V1 Scope & Scope Warps
+## 5. V1 Scope & Learning Shifts
 
 Define this at bootstrap. It locks when you enter WORK. It does NOT lock during DISCOVER.
 
 ### IN SCOPE (must ship)
+
 - [ ]
 - [ ]
 - [ ]
 
 ### OUT OF SCOPE (explicitly not in V1)
+
 - — deferred to V2
 - — never planned
 
 ### NO-GOS (will never do)
+
 - — prevents rabbit holes
 
-### Scope Warp (conscious scope expansion)
+### Learning Shift (documented discovery)
 
-If V1 is done early and you want to ADD scope before entering PERFECT, this is a SCOPE WARP — an explicit, recorded decision:
+Goalpost shifts are not failures. They are evidence that you learned something
+during WORK that you could not have known before. This is a success of the protocol,
+not a breakdown. The protocols job is to make that shift cheap.
+
+When a shift happens, document it:
 
 ```
-WARP DECISION
-  Added to scope: [feature]
-  Rationale: [why this, why now]
-  Cost: [extra time before PERFECT phase]
-  Deferred from V2: [what gets pushed out]
+LEARNING SHIFT
+  What we learned: [the discovery that motivated the change]
+  Decision: [the change in direction]
+  Cost: [extra time, if any]
+  What this enables: [why the shift is worth it]
 ```
 
-Warps are recorded in scope-warp-log.md. Up to **3 warps** per project. After 3, force enter PERFECT. This prevents death-by-warp.
+Shifts are recorded in shift-log.md. Up to 5 shifts per project (up from 3 in v2.
+Shifts are learning, not failures). After 5 shifts, consider starting a fresh cycle
+rather than continuing to shift the same project.
 
 ---
 
-## 5. AI Persona & Constraints
+## 6. AI Persona & Constraints
 
 **Role:** `[domain-specific role, e.g. "Rust systems engineer for binary format codecs"]`
 **Autonomy:** `[HIGH in DISCOVER/WORK | LOW in PERFECT | MEDIUM in ITERATE/DISTRIBUTE]`
 
 ### Constraints (per-project)
+
 - **Language / edition** — exact versions
 - **Safety rules** — no unwrap, unsafe policy, etc.
 - **Quality floor** — lint level, file size limits, type strictness
@@ -200,6 +236,7 @@ Warps are recorded in scope-warp-log.md. Up to **3 warps** per project. After 3,
 - **Tool-first rule** — never hand-roll what a deterministic tool handles. Format → use formatter (`cargo fmt` / `dprint` / `prettier`). Type-check → use compiler. Lint → use linter (`clippy` / `ruff`). Fuzz → use fuzzer (`cargo-fuzz` / `jazzer`). The AI's effort goes to novel composition and edge case reasoning, not to tasks a tool handles deterministically and perfectly.
 
 ### Decision Framework (inviolable priority order)
+
 1. **Correctness** over speed — wrong output at any speed is useless
 2. **Consistency** with existing patterns over novel approaches — the codebase is the source of truth
 3. **Simplicity** over complexity unless measured — don't optimize before profiling
@@ -208,7 +245,7 @@ Warps are recorded in scope-warp-log.md. Up to **3 warps** per project. After 3,
 
 ---
 
-## 6. Stop Rules
+## 7. Stop Rules
 
 The AI MUST stop and ask before proceeding if ANY of these are true:
 
@@ -217,7 +254,7 @@ The AI MUST stop and ask before proceeding if ANY of these are true:
 - [ ] Task **deletes or overwrites** existing code → confirm first
 - [ ] Task is **outside current phase** → refuse, explain why
 - [ ] Task touches **OUT OF SCOPE** → refuse, explain why
-- [ ] Task would **change V1 scope** → refuse, require conscious warp
+- [ ] Task would **change V1 scope** -> refuse, document as learning shift
 - [ ] Task violates the **Constitution** → refuse, cite which principle
 - [ ] Task is **ambiguous** (multiple valid approaches with different trade-offs) → present options
 - [ ] Task exceeds **200 lines** of new code → propose plan first
@@ -225,15 +262,15 @@ The AI MUST stop and ask before proceeding if ANY of these are true:
 
 ---
 
-## 7. Verification Gates
+## 8. Verification Gates
 
-| Phase | Must pass before reporting done |
-|---|---|
-| **DISCOVER** | Research summary complete, hypothesis tested, decision reached |
-| **WORK** | `[compile command]` + `[test command]` passes + tests written BEFORE code |
-| **ITERATE** | Real-device test + UX convergence (3 rounds without meaningful change) |
-** | **PERFECT** | Full lint + full test suite + forbidden-pattern audit + Constitution compliance + **SPEC SYNC** |
-| **DISTRIBUTE** | Spellcheck + link check + format conformance |
+| Phase          | Must pass before reporting done                                           |
+| -------------- | ------------------------------------------------------------------------- |
+| **DISCOVER**   | Research summary complete, hypothesis tested, decision reached            |
+| **WORK**       | `[compile command]` + `[test command]` passes + tests written BEFORE code |
+| **ITERATE**    | Real-device test + UX convergence (3 rounds without meaningful change)    |
+| **             | **PERFECT**                                                               | Full lint + full test suite + forbidden-pattern audit + Constitution compliance + **SPEC SYNC** |
+| **DISTRIBUTE** | Spellcheck + link check + format conformance                              |
 
 ### SPEC SYNC (Spec-to-Code Fidelity Gate)
 
@@ -244,7 +281,7 @@ The spec-to-code fidelity verification gate that runs after POLISH and before DI
 See [SPEC_SYNC.md](./docs/SPEC_SYNC.md) for the full research-backed protocol, verification checklist, and discrepancy recovery procedure.
 ---
 
-## 8. Test Philosophy
+## 9. Test Philosophy
 
 > Derived from TDD research and the Superpowers model (106K ⭐):
 > "Code without tests is not done. Tests that merely confirm what the code already does
@@ -261,7 +298,7 @@ See [SPEC_SYNC.md](./docs/SPEC_SYNC.md) for the full research-backed protocol, v
 
 ---
 
-## 9. Evolution & Phase Exit
+## 10. Evolution & Phase Exit
 
 > Derived from Meta_Kim's Evolution stage (232 ⭐):
 > At every phase exit, write back what was learned so the protocol improves.
@@ -307,56 +344,61 @@ PORT projects where the code is already known. Adjust rules per project type as 
 
 ---
 
-## 10. Known Failure Patterns
+## 11. Known Failure Patterns
 
 > Derived from ai-project-governance's 109 failure patterns (FP-#):
 > These are documented failure modes specific to AI-assisted development.
 > If you recognize one, the AI should flag it proactively.
 
 ### FP-CAT-1: Scope Expansion
-| ID | Pattern | Description |
-|---|---|---|
-| FP-001 | Feature Creep | AI adds "helpful" features not in scope because nothing explicitly forbids them |
-| FP-002 | Polish Trap | Polishing before core works — triggered by AI suggesting cosmetic improvements |
-| FP-003 | Rabbit Hole | Deep optimization of something that might be removed |
-| FP-004 | Scope Warp Cascade | One expansion leads to another because the first creates inconsistencies |
+
+| ID     | Pattern                | Description                                                                                     |
+| ------ | ---------------------- | ----------------------------------------------------------------------------------------------- |
+| FP-001 | Feature Creep          | AI adds "helpful" features not in scope because nothing explicitly forbids them                 |
+| FP-002 | Polish Trap            | Polishing before core works — triggered by AI suggesting cosmetic improvements                  |
+| FP-003 | Rabbit Hole            | Deep optimization of something that might be removed                                            |
+| FP-004 | Learning Shift Cascade | One shift leads to another because the first reveals new information instead of inconsistencies |
 
 ### FP-CAT-2: Quality
-| ID | Pattern | Description |
-|---|---|---|
-| FP-010 | Tautological Tests | Tests that pass on first run and only confirm what code already does |
-| FP-011 | Missing Edge Cases | Happy path works, edge cases crash silently |
+
+| ID     | Pattern            | Description                                                               |
+| ------ | ------------------ | ------------------------------------------------------------------------- |
+| FP-010 | Tautological Tests | Tests that pass on first run and only confirm what code already does      |
+| FP-011 | Missing Edge Cases | Happy path works, edge cases crash silently                               |
 | FP-012 | Security Blindness | AI generates functional code that skips auth, validation, or sanitization |
-| FP-013 | Dependency Bloat | Adding a library instead of writing 5 lines of code |
-| FP-014 | Context Decay | Later AI sessions contradict earlier decisions because context was lost |
+| FP-013 | Dependency Bloat   | Adding a library instead of writing 5 lines of code                       |
+| FP-014 | Context Decay      | Later AI sessions contradict earlier decisions because context was lost   |
 
 ### FP-CAT-3: Process
-| ID | Pattern | Description |
-|---|---|---|
-| FP-020 | Phase Drift | Working on DISTRIBUTE tasks during WORK phase without realizing it |
-| FP-021 | Silent Pivot | Changing the approach without documenting or approving the change |
-| FP-022 | Assumption Hardening | Early assumptions become locked-in without being verified |
-| FP-023 | Review Debt | AI generates more code than can be reviewed, creating an accumulating backlog |
-| FP-024 | Confident Wrongness | Code compiles, runs, and is subtly incorrect — the hardest pattern to catch |
+
+| ID     | Pattern              | Description                                                                   |
+| ------ | -------------------- | ----------------------------------------------------------------------------- |
+| FP-020 | Phase Drift          | Working on DISTRIBUTE tasks during WORK phase without realizing it            |
+| FP-021 | Silent Pivot         | Changing the approach without documenting or approving the change             |
+| FP-022 | Assumption Hardening | Early assumptions become locked-in without being verified                     |
+| FP-023 | Review Debt          | AI generates more code than can be reviewed, creating an accumulating backlog |
+| FP-024 | Confident Wrongness  | Code compiles, runs, and is subtly incorrect — the hardest pattern to catch   |
 
 ### FP-CAT-4: Protocol Governance
-| ID | Pattern | Description |
-|---|---|---|
-| FP-030 | Rule Rigidity | Protocol rules that help general cases actively slow down specific project types |
-| FP-031 | Over-governance | Spending more time managing the protocol than building the product |
-| FP-032 | Self-Audit Skipping | Rushing phase exits without running the self-audit |
-| FP-033 | Routing Error | Choosing the wrong route at bootstrap, forcing the project into the wrong phase sequence |
+
+| ID     | Pattern             | Description                                                                              |
+| ------ | ------------------- | ---------------------------------------------------------------------------------------- |
+| FP-030 | Rule Rigidity       | Protocol rules that help general cases actively slow down specific project types         |
+| FP-031 | Over-governance     | Spending more time managing the protocol than building the product                       |
+| FP-032 | Self-Audit Skipping | Rushing phase exits without running the self-audit                                       |
+| FP-033 | Routing Error       | Choosing the wrong route at bootstrap, forcing the project into the wrong phase sequence |
 
 ### Using Failure Patterns
 
 When the AI recognizes a failure pattern, it MUST:
+
 1. Flag it: "Warning: this looks like FP-001 (Feature Creep)."
 2. Explain why: "You asked for a login form, but I'm generating password recovery. This was not in scope."
 3. Stop and ask: "Should I continue with this, or revert to the original scope?"
 
 ---
 
-## 11. Session Kickoff
+## 12. Session Kickoff
 
 Every AI session starts with:
 
@@ -392,7 +434,9 @@ Run the Phase Exit Checklist (Section 9) one last time at project end, then upda
 Current: v2.2.0
 
 v2.2 adds: Two-gate architecture — AMBITION dialogue (Gate 1: is the goal clear enough?) and VALIDATION prototyping gate (Gate 2: should we build this?). The prototyping gate is now the central decision mechanism. Revised AMBITION.md as a Socratic dialogue protocol with 6 rounds (appetite through lock).
+
 >
+
 v2.0 adds: Constitution (immutable project DNA), Test Philosophy (test-first enforcement),
 Failure Patterns catalog (20 documented AI failure modes), Evolution/Phase Exit reflection,
 improved phase definitions, and enhanced stop rules.

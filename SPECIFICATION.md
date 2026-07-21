@@ -1,5 +1,8 @@
 # SPECIFICATION.md — The Plan IS the Spec
 
+> **v3 note:** Before filling this template, run the Intent Decomposition protocol (RULES.md Section 2).
+> Each dimension identified in the MECE tree should map to a section in this spec.
+
 > Everything in one document: constitution, architecture, files, CI, testing, operations,
 > dependencies, UX, timeline, release, documentation, ecosystem, AI attribution.
 > Three layers of detail: MACRO (system), MESO (component), MICRO (implementation).
@@ -13,7 +16,7 @@ This specification uses a **three-layer model**:
 
 | Layer     | Level          | Scope                                        | Changing this requires                |
 | --------- | -------------- | -------------------------------------------- | ------------------------------------- |
-| **MACRO** | System         | Decisions that constrain the entire project  | A scope warp (RULES.md section 4)     |
+| **MACRO** | System         | Decisions that constrain the entire project  | A learning shift (RULES.md section 5) |
 | **MESO**  | Component      | Contracts between components                 | Interface renegotiation               |
 | **MICRO** | Implementation | Bounds within which the executor has freedom | None — executor decides within bounds |
 
@@ -26,8 +29,8 @@ Each section below follows the format:
 **Priority tiers:** Not all sections need full detail for every project.
 
 - **Tier 1** (sections 0-7): Required for ANY project. Fill these before execution.
-- **Tier 2** (sections 8-10): Required for production projects. Skip for prototypes.
-- **Tier 3** (sections 11-13): Required for open-source or long-lived projects.
+- **Tier 2** (sections 8-11): Required for production projects. Skip for prototypes.
+- **Tier 3** (sections 12-14): Required for open-source or long-lived projects.
 
 ---
 
@@ -514,7 +517,28 @@ _Packaging commands, signing requirements, distribution channels._
 
 ---
 
-## 11. Documentation Strategy (Tier 3)
+## 11. Design for Change
+
+Intent: How does this project make goalpost shifts cheap instead of expensive?
+
+Before architecture decisions, note which design-for-change rules apply:
+
+| Rule                                              | Applied? | How                                    |
+| ------------------------------------------------- | -------- | -------------------------------------- |
+| Interface Rule (no interface before 2nd consumer) | Yes/No   | [specific modules where this applies]  |
+| Test Rule (contract over implementation)          | Yes/No   | [test strategy]                        |
+| Module Boundary (single entry point)              | Yes/No   | [module structure]                     |
+| Size Rule (250/40 LOC limits)                     | Yes/No   | [enforcement mechanism]                |
+| Cycle Rule (shippable per cycle)                  | Yes/No   | [cycle length, what "shippable" means] |
+| Appetite Rule (time before scope)                 | Yes/No   | [time budget for this project]         |
+| AI Rule (same structural checks)                  | Yes/No   | [how AI code is reviewed]              |
+| Rule of Three (extract on 3rd)                    | Yes/No   | [abstraction strategy]                 |
+| Dependency Rule (core ≠ infra)                    | Yes/No   | [module dependency direction]          |
+| Clean Backlog (no perpetual)                      | Yes/No   | [how old ideas compete]                |
+
+---
+
+## 12. Documentation Strategy (Tier 3)
 
 ### MACRO — Documentation Plan
 
@@ -548,7 +572,7 @@ _Markdown style guide, doc comment format, example code style._
 
 ---
 
-## 12. Ecosystem & Community (Tier 3)
+## 13. Ecosystem & Community (Tier 3)
 
 ### MACRO — Governance
 
@@ -582,7 +606,7 @@ _PR requirements, review checklist, commit message conventions._
 
 ---
 
-## 13. AI Attribution & Transparency (Tier 3)
+## 14. AI Attribution & Transparency (Tier 3)
 
 ### MACRO — Policy
 
@@ -614,7 +638,7 @@ _Commit message trailer format, file header format, documentation attribution._
 
 ---
 
-## Verification Checklist (Executor Reads Before Starting)
+## 15. Verification Checklist (Executor Reads Before Starting)
 
 - [ ] All `{{placeholders}}` across all sections are filled
 - [ ] No "TODO" or "TBD" remains
@@ -625,8 +649,8 @@ _Commit message trailer format, file header format, documentation attribution._
 - [ ] Each dependency (section 5) has a version constraint
 - [ ] Timeline (section 7) has a circuit breaker condition
 - [ ] Tier 1 sections 0-7 are fully filled
-- [ ] Tier 2 sections 8-10 are filled for production projects
-- [ ] Tier 3 sections 11-13 are filled for open-source projects
+- [ ] Tier 2 sections 8-11 are filled for production projects
+- [ ] Tier 3 sections 12-14 are filled for open-source projects
 - [ ] Fuzz targets exist in `fuzz/` directory (required for Tier 2+ projects)
 - [ ] Benchmark suite exists in `benches/` (required for performance-sensitive projects)
 - [ ] Snapshot testing via `insta`/`snapbox`/`expect_test` is configured
@@ -641,14 +665,14 @@ _Commit message trailer format, file header format, documentation attribution._
 ## Meta: How to Write This Spec
 
 1. **Start at Tier 1 (sections 0-7)** — these are required for any project. Fill them first.
-2. **Add Tier 2 (sections 8-10)** for production projects. These prevent operational surprises.
-3. **Add Tier 3 (sections 11-13)** for open-source or long-lived projects.
+2. **Add Tier 2 (sections 8-11)** for production projects. These prevent operational surprises.
+3. **Add Tier 3 (sections 12-14)** for open-source or long-lived projects.
 4. **MACRO must be filled for every section you use.** MESO and MICRO are optional but recommended.
 5. **Use the three-layer format** — MACRO for system decisions, MESO for component contracts, MICRO for implementation bounds.
-6. **Lock sections after execution starts** — changes go through RULES.md scope warps.
+6. **Lock sections after execution starts** - changes go through RULES.md learning shift rules.
 
 ---
 
 ## Origin
 
-Rewritten July 2026 after a comprehensive research pass on software specification dimensions. Three-layer model (macro/meso/micro) based on architecture decomposition principles. 14 dimensions synthesized from IEEE 830, Shape Up, ADR practice, and production software requirements.
+Rewritten July 2026 after a comprehensive research pass on software specification dimensions. Three-layer model (macro/meso/micro) based on architecture decomposition principles. 15 dimensions synthesized from IEEE 830, Shape Up, ADR practice, and production software requirements.

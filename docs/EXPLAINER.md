@@ -22,7 +22,7 @@ A bird's-eye view. What does the project do? What are its high-level pieces and 
 
 Write this so someone who has never seen the project can answer: "What is this thing, broadly?"
 
-*Example (not real): "This project is a library that converts image files from one format to another. It has three layers: a parser that reads raw bytes, a decoder that turns bytes into pixels, and an encoder that writes pixels into a new format. Each layer is a separate module that talks to the next through a well-defined interface."*
+_Example (not real): "This project is a library that converts image files from one format to another. It has three layers: a parser that reads raw bytes, a decoder that turns bytes into pixels, and an encoder that writes pixels into a new format. Each layer is a separate module that talks to the next through a well-defined interface."_
 
 ### 2. Data Flow Walk
 
@@ -30,7 +30,7 @@ Pick one concrete user action or system trigger. Walk it from start to finish th
 
 The goal: a reader should be able to trace what happens when they press a button, send a request, or run a command.
 
-*Example: "When a user uploads a .png file, the CLI module receives the file path and passes it to the Parser. The Parser reads the file header, confirms it's a valid PNG, and extracts the raw pixel data. It hands this data to the Decoder, which converts it into the project's internal pixel format (a list of RGBA values). The Encoder then takes those values and writes them into the output format the user requested. If any step fails, the error is returned with a plain-language message describing what went wrong and where."*
+_Example: "When a user uploads a .png file, the CLI module receives the file path and passes it to the Parser. The Parser reads the file header, confirms it's a valid PNG, and extracts the raw pixel data. It hands this data to the Decoder, which converts it into the project's internal pixel format (a list of RGBA values). The Encoder then takes those values and writes them into the output format the user requested. If any step fails, the error is returned with a plain-language message describing what went wrong and where."_
 
 ### 3. Module Breakdown
 
@@ -42,7 +42,7 @@ For each major module in the project, answer three questions:
 
 List modules in dependency order (foundation first, higher-level later). Every module must have a single, clear responsibility. If a module does more than one thing, that's a smell -- flag it.
 
-*Example:*
+_Example:_
 
 *| Module | Responsibility | Public API | Key Types |
 *|--------|---------------|------------|-----------|
@@ -56,7 +56,7 @@ For every non-obvious choice in the project, answer: what was the situation, wha
 
 Format each decision as a short story:
 
-*"We needed to store user data. We considered using a database (PostgreSQL) or flat JSON files. We chose SQLite because the project runs on a single machine and doesn't need a server. The tradeoff is that SQLite can't handle concurrent writes from multiple users -- but that's fine because this project is single-user."*
+_"We needed to store user data. We considered using a database (PostgreSQL) or flat JSON files. We chose SQLite because the project runs on a single machine and doesn't need a server. The tradeoff is that SQLite can't handle concurrent writes from multiple users -- but that's fine because this project is single-user."_
 
 Include at least 3 decisions. Cover architecture, library choices, and tradeoffs that affect how the project works.
 
@@ -71,7 +71,7 @@ How do we know the project is correct? List what prevents bugs from reaching the
 
 Be honest about limits. If a module has no tests, say so. The reader should know where to be careful.
 
-*Example: "The Parser and Decoder have unit tests for every error path (corrupted files, empty files, unknown formats). The Encoder has fewer tests -- it was added late. A CI pipeline runs all tests and a linter on every commit. The project is written in Rust, which guarantees no null pointer crashes or buffer overflows at compile time."*
+_Example: "The Parser and Decoder have unit tests for every error path (corrupted files, empty files, unknown formats). The Encoder has fewer tests -- it was added late. A CI pipeline runs all tests and a linter on every commit. The project is written in Rust, which guarantees no null pointer crashes or buffer overflows at compile time."_
 
 ---
 
@@ -112,9 +112,10 @@ This two-pass structure prevents the most common failure: a beautiful explainer 
 EXPLAINER.md sits at the boundary between POLISH and SPEC SYNC in the Development Protocol pipeline:
 
 ```
-RAW INTENT → AMBITION → LANDSCAPE → VALIDATION
-  → SPECIFICATION → EXECUTOR → RULES.md (autonomous build)
-  → POLISH → **EXPLAINER.md** → SPEC SYNC → (iterate or ship)
+RAW INTENT → EXTRACTION → FUNDAMENTALS → DECOMPOSITION
+  → AMBITION → LANDSCAPE → VALIDATION → SPECIFICATION
+  → EXECUTOR → POLISH → **EXPLAINER.md** → SPEC_SYNC
+  → REVIEW → ship
 ```
 
 - **Produced**: During POLISH, after code passes quality gates and before the human final pass is complete.

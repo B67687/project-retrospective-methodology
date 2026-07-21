@@ -1,17 +1,29 @@
-# AMBITION.md — Intent Clarification Dialogue
+# AMBITION.md — Intent Clarification Dialogue (Research-Interleaved)
 
-> This is NOT a form to fill. It is a **conversation protocol** between you and the AI.
-> The AI's job is not to approve your idea — it's to interrogate, push back, and help you
-> converge on a goal that is specific enough to survive the rest of the pipeline.
+> This is a **research-interleaved conversation protocol** between you and the AI.
+> The AI does NOT just ask questions from its training knowledge. Between each round,
+> it researches (web search, codebase exploration, tool analysis) based on what you
+> just said, then uses fresh findings to ask a better question next round.
 >
-> You bring the raw intention. The AI brings research knowledge, Socratic questioning,
-> and the discipline to say "this isn't clear enough yet."
+> The cycle: **You share → AI researches → AI asks → You answer → AI researches deeper → ... → convergence**
 
----
+> The output is a falsifiable goal that both parties are confident enough to commit to.
+
+> **This is not a linear pipeline. It is a tightening loop.** Each cycle reduces the
+> remaining ambiguity by roughly half. Stop when the remaining unknowns no longer
+> block architecture decisions.
 
 ## Dialogue Rounds
 
-### Round 0 — Appetite
+Each round follows: `AI asks → You answer → AI researches → AI asks next (research-informed) → ...`
+The research step between rounds is MANDATORY. If the AI skips it, the next question is uninformed.
+
+### Ground Rules
+
+1. **Real research between rounds** — The AI must search the web, check existing code, or consult docs between each user answer. It must NOT rely only on training knowledge to steer the dialogue.
+2. **Three-strikes convergence** — If round N's research adds nothing new (all findings duplicate round N-1), the AI flags convergence and moves to Lock.
+3. **Explicit citation** — When AI researches and returns, it cites what it found: "I looked at X (source), it shows Y. This means our approach should Z."
+4. **Permission to say 'I don't know'** — The AI can flag when research found nothing. This itself is a finding (proves the space is unexplored).
 
 **Q:** "If this project were to take 1 week, 2 weeks, 6 weeks — which feels right?"
 **A:** "I have like 1 month of free time, but preferably we can make this perfect in only 1 week. I will likely invest time in this forever."
@@ -44,7 +56,7 @@ I need a thing that takes me from intention to final product (end to end), and p
 **Insight from AI:** The pipeline should center on a **prototyping gate** as the critical decision mechanism — not just a step before the spec, but the central decision point.
 
 ```
-INTENT → AMBITION → LANDSCAPE → 
+INTENT → AMBITION → LANDSCAPE →
     ↓
 PROTOTYPING GATE (critical decision)
     ├── "This is worth the full build" → SPECIFICATION → EXECUTE → POLISH
@@ -64,7 +76,7 @@ Prototype cheaply, learn what only building can teach, then decide. This matches
 **Success Criteria:**
 
 1. **Clarity speed:** I can take a vague intention and reach a clear KILL/COMMIT decision within 3 days of starting the protocol
-2. **Build stability:** After a COMMIT decision, the build phase completes without scope warps or goalpost drift — the spec survives to shipping
+2. **Build stability:** After a COMMIT decision, the build phase completes with documented shifts when discoveries arise - the spec adapts without derailing
 3. **Retrospective validation:** Projects I KILL during prototyping are clearly "not worth it" in hindsight, not "I wish I'd pushed through"
 
 **Constraints:**
@@ -97,6 +109,7 @@ All checks pass:
 - [x] The intent has been explicitly locked — no more changes after this document
 
 **Schon's 5 frame criteria:**
+
 1. **Specificity** — YES (AI can read this and know what to build)
 2. **Falsifiability** — YES (we'll know if builds still drift after prototyping)
 3. **Testability** — YES (3 success criteria are measurable)
